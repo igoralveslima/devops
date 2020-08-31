@@ -1,7 +1,6 @@
 provider "aws" {
   version = "~> 3.4.0"
   region  = "us-east-1"
-  profile = "personal"
 }
 
 resource "aws_organizations_organization" "org" {
@@ -42,9 +41,10 @@ data "aws_iam_policy_document" "assume_admin_role" {
 }
 
 resource "aws_iam_role" "admin" {
-  name               = "admin"
-  path               = "/"
-  assume_role_policy = data.aws_iam_policy_document.allow_account_user_with_mfa.json
+  name                 = "admin"
+  path                 = "/"
+  max_session_duration = 43200
+  assume_role_policy   = data.aws_iam_policy_document.allow_account_user_with_mfa.json
 }
 
 resource "aws_iam_role_policy" "full_admin_access" {
@@ -68,9 +68,9 @@ resource "aws_iam_user" "ilima" {
 }
 
 resource "aws_iam_group_membership" "admin" {
-  name  = "admin"
-  group = "admin"
-  users = ["ilima"]
+  name       = "admin"
+  group      = "admin"
+  users      = ["ilima"]
   depends_on = [aws_iam_user.ilima]
 }
 
