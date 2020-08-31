@@ -3,10 +3,6 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-resource "aws_organizations_organization" "org" {
-  feature_set = "ALL"
-}
-
 data "aws_iam_policy_document" "allow_account_user_with_mfa" {
   statement {
     actions = ["sts:AssumeRole"]
