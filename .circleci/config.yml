@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  plan-apply:
+  plan:
     working_directory: /tmp/terraform
     docker:
       - image: hashicorp/terraform:light
@@ -36,9 +36,9 @@ workflows:
   version: 2
   plan_approve_apply:
     jobs:
-      - plan-apply:
+      - plan:
           context: AWS
-      - hold-apply:
+      - approve:
           type: approval
           requires:
             - plan-apply
