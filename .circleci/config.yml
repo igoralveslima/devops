@@ -41,8 +41,8 @@ workflows:
       - approve:
           type: approval
           requires:
-            - plan-apply
+            - plan
       - apply:
           context: AWS
           requires:
-            - hold-apply
+            - approve
