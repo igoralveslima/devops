@@ -36,7 +36,7 @@ workflows:
   version: 2
   plan_approve_apply:
     jobs:
-      - plan-apply
+      - plan-apply:
           context: AWS
       - hold-apply:
           type: approval
