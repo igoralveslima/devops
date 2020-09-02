@@ -1,5 +1,4 @@
-data "aws_iam_role" "ecs_assume_role_policy" {
-  name               = "${var.app_name}_ecs_assume_role"
+locals {
   assume_role_policy = <<EOF
 {
  "Version": "2012-10-17",
@@ -19,12 +18,12 @@ EOF
 
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = "${var.app_name}_ecs_task_execution"
-  assume_role_policy = data.aws_iam_role.ecs_assume_role_policy
+  assume_role_policy = local.assume_role_policy
 }
 
 resource "aws_iam_role" "ecs_task_role" {
   name               = "${var.app_name}_ecs_task"
-  assume_role_policy = data.aws_iam_role.ecs_assume_role_policy
+  assume_role_policy = local.assume_role_policy
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attachment" {
