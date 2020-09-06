@@ -34,7 +34,7 @@ resource "aws_route_table_association" "public" {
 ### Compute
 
 resource "aws_autoscaling_group" "main" {
-  name                 = "${var.app_name}_asg"
+  name                 = "${var.app_name}-asg"
   vpc_zone_identifier  = aws_subnet.public.*.id
   min_size             = var.asg_min
   max_size             = var.asg_max
@@ -98,7 +98,7 @@ resource "aws_security_group" "lb_sg" {
   description = "controls access to the application ELB"
 
   vpc_id = aws_vpc.main.id
-  name   = "${var.app_name}_lb_sg"
+  name   = "${var.app_name}-lb-sg"
 
   ingress {
     protocol  = "tcp"
@@ -123,7 +123,7 @@ resource "aws_security_group" "lb_sg" {
 resource "aws_security_group" "instance_sg" {
   description = "controls direct access to application instances"
   vpc_id      = aws_vpc.main.id
-  name        = "${var.app_name}_ec2_sg"
+  name        = "${var.app_name}-ec2-sg"
 
   ingress {
     protocol  = "tcp"
@@ -156,7 +156,7 @@ resource "aws_security_group" "instance_sg" {
 ## ECS
 
 resource "aws_ecs_cluster" "app" {
-  name = "${var.app_name}_cluster"
+  name = "${var.app_name}-cluster"
 }
 
 data "template_file" "task_definition" {
@@ -164,7 +164,7 @@ data "template_file" "task_definition" {
 
   vars = {
     image_url        = var.image_url
-    container_name   = "${var.app_name}_container"
+    container_name   = "${var.app_name}-container"
     container_port   = var.container_port
     log_group_region = var.aws_region
     log_group_name   = aws_cloudwatch_log_group.app.name
@@ -172,12 +172,12 @@ data "template_file" "task_definition" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                = "${var.app_name}_td"
+  family                = "${var.app_name}-td"
   container_definitions = data.template_file.task_definition.rendered
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "${var.app_name}_service"
+  name            = "${var.app_name}-service"
   cluster         = aws_ecs_cluster.app.id
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = var.service_desired_count
@@ -185,7 +185,7 @@ resource "aws_ecs_service" "app" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.test.id
-    container_name   = "${var.app_name}_container"
+    container_name   = "${var.app_name}-container"
     container_port   = var.container_port
   }
 
@@ -198,7 +198,7 @@ resource "aws_ecs_service" "app" {
 ## IAM
 
 resource "aws_iam_role" "ecs_service" {
-  name = "${var.app_name}_service_role"
+  name = "${var.app_name}-service-role"
 
   assume_role_policy = <<EOF
 {
@@ -218,7 +218,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "ecs_service" {
-  name = "${var.app_name}_service_role_policy"
+  name = "${var.app_name}-service-role-policy"
   role = aws_iam_role.ecs_service.name
 
   policy = <<EOF
@@ -243,12 +243,12 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "app" {
-  name = "${var.app_name}_instance_profile"
+  name = "${var.app_name}-instance-profile"
   role = aws_iam_role.app_instance.name
 }
 
 resource "aws_iam_role" "app_instance" {
-  name = "${var.app_name}_instance_profile_role"
+  name = "${var.app_name}-instance-profile-role"
 
   assume_role_policy = <<EOF
 {
@@ -277,7 +277,7 @@ data "template_file" "instance_profile" {
 }
 
 resource "aws_iam_role_policy" "instance" {
-  name   = "${var.app_name}_instance_profile_role_policy"
+  name   = "${var.app_name}-instance-profile-role-policy"
   role   = aws_iam_role.app_instance.name
   policy = data.template_file.instance_profile.rendered
 }
@@ -285,14 +285,14 @@ resource "aws_iam_role_policy" "instance" {
 ## ALB
 
 resource "aws_alb_target_group" "test" {
-  name     = "${var.app_name}_alb_tg"
+  name     = "${var.app_name}-alb-tg"
   port     = var.alb_port
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
 }
 
 resource "aws_alb" "main" {
-  name            = "${var.app_name}_alb"
+  name            = "${var.app_name}-alb"
   subnets         = aws_subnet.public.*.id
   security_groups = [aws_security_group.lb_sg.id]
 }
