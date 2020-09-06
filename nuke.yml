@@ -1,0 +1,19 @@
+---
+regions:
+  - us-east-1
+
+account-blacklist:
+  - 999999999999 # production
+
+accounts:
+  368518502115: # aug2020
+    filters:
+      IAMUser:
+        - "ilima"
+        - "circleci"
+      IAMUserPolicyAttachment:
+        - "ilima -> AdministratorAccess"
+        - "circle -> AdministratorAccess"
+      IAMUserAccessKey:
+        - "admin -> AKIAVLTLKC3R5FY2N2CA"
+        - "admin -> AKIAVLTLKC3RS5CUBCPC"
