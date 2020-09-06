@@ -7,7 +7,7 @@
       "name": "${container_name}",
       "portMappings": [
         {
-          "containerPort": "${container_port}",
+          "containerPort": 2368,
           "hostPort": 0
         }
       ],
