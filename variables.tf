@@ -1,5 +1,5 @@
 variable "app_name" {
-    description = "Name of the application to prefix all resources with"
+  description = "Name of the application to prefix all resources with"
 }
 
 variable "key_name" {
@@ -11,11 +11,11 @@ variable "admin_cidr_ingress" {
 }
 
 variable "container_port" {
-    description = "Port that application container listens on"
+  description = "Port that application container listens on"
 }
 
 variable "alb_port" {
-    description = "Port that alb listens on"
+  description = "Port that alb listens on"
 }
 
 variable "aws_region" {
