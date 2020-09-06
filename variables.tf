@@ -2,8 +2,8 @@ variable "app_name" {
   description = "Name of the application to prefix all resources with"
 }
 
-variable "key_name" {
-  description = "Name of AWS key pair"
+variable "rsa_public_key" {
+  description = "Contents of the public RSA key to register on AWS"
 }
 
 variable "admin_cidr_ingress" {
@@ -11,6 +11,7 @@ variable "admin_cidr_ingress" {
 }
 
 variable "container_port" {
+  type        = number
   description = "Port that application container listens on"
 }
 

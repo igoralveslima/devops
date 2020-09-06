@@ -33,6 +33,11 @@ resource "aws_route_table_association" "public" {
 
 ### Compute
 
+resource "aws_key_pair" "ssh" {
+  key_name   = "${var.app_name}-ssh"
+  public_key = var.rsa_public_key
+}
+
 resource "aws_autoscaling_group" "main" {
   name                 = "${var.app_name}-asg"
   vpc_zone_identifier  = aws_subnet.public.*.id
@@ -80,7 +85,7 @@ resource "aws_launch_configuration" "main" {
     aws_security_group.instance_sg.id,
   ]
 
-  key_name                    = var.key_name
+  key_name                    = aws_key_pair.ssh.id
   image_id                    = data.aws_ami.stable_coreos.id
   instance_type               = var.instance_type
   iam_instance_profile        = aws_iam_instance_profile.app.name
