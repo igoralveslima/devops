@@ -18,6 +18,10 @@ variable "alb_port" {
   description = "Port that alb listens on"
 }
 
+variable "image_url" {
+  description = "The full location of the docker image to pull"
+}
+
 variable "aws_region" {
   description = "The AWS region to create things in."
   default     = "us-east-1"
