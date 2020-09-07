@@ -55,5 +55,5 @@ variable "asg_desired" {
 
 variable "service_desired_count" {
   description = "Desired numbers of tasks in the ecs service"
-  default     = "1"
+  default     = "3"
 }
